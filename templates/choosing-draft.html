@@ -1,0 +1,62 @@
+<? var data = GmailApp.getDraftMessages() ?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container-fluid">
+     <div class="row">
+       <div class="col-sm-12">
+         <h4 class="text-center">Please select a draft </h4>
+         <div class="form-group">
+         <label for="draft-title">Select a draft...</label>
+          <select class="form-control" id="draft-selector" onchange="getSelected()">
+          <option value="">Please select a draft... </option>
+          <? for (var i = 0; i < data.length; i++) { ?>
+           <option value="<?= data[i].getId() ?>"><?= data[i].getSubject() ?></option>
+          <? } ?>
+          </select>
+          <hr>
+          <div class="card bg-light text-dark">
+            <div class="card-body" id="draft-body"></div>
+          </div>
+          <hr>
+          <button type="button" class="btn btn-outline-success float-right" onclick="setDraft()">Set a draft</button>
+          <div class="clearfix"></div>
+          <div class="alert alert-success" style="display: none; margin-top: 10px;" id="success-message">
+            <strong>Success!</strong> Draft successfully selected!
+          </div>
+         </div>
+       </div>
+     </div>
+    </div>
+  </body>
+  <script>
+  
+    function onSuccess(draft) {
+      document.getElementById('draft-body').innerHTML = draft;
+    }
+    
+    function onSetDraftSuccess(result) {
+      if (result) {
+        document.getElementById('success-message').style.display = 'block';
+      }
+    }
+  
+    function getSelected() {
+      var select = document.getElementById('draft-selector');
+      var selectedOption = select.options[select.selectedIndex].value;
+      google.script.run.withSuccessHandler(onSuccess).getDraftBody(selectedOption);
+    }
+    
+    function setDraft() {
+      var select = document.getElementById('draft-selector');
+      var selectedOption = select.options[select.selectedIndex].value;
+      google.script.run.withSuccessHandler(onSetDraftSuccess).setPreference('DRAFT_ID', selectedOption);
+    }
+  </script>
+</html>
+
+

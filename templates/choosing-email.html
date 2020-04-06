@@ -1,0 +1,49 @@
+<? var data = SpreadsheetApp.getActiveSheet().getDataRange().getValues()[0]; ?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container-fluid">
+     <div class="row">
+       <div class="col-sm-12">
+         <h4 class="text-center">Please select an email column </h4>
+         <div class="form-group">
+         <label for="draft-title">Select an email column...</label>
+          <select class="form-control" id="email-column-selector">
+          <option value="">Please select an email column... </option>
+          <? for (var i = 0; i < data.length; i++) { ?>
+           <option value="<?= i ?>"><?= data[i] ?></option>
+          <? } ?>
+          </select>
+          <hr>
+          <button type="button" class="btn btn-outline-success float-right" onclick="setEmailColumn()">Set an email column</button>
+          <div class="clearfix"></div>
+          <div class="alert alert-success" style="display: none; margin-top: 10px;" id="success-message">
+            <strong>Success!</strong> Email column successfully selected!
+          </div>
+         </div>
+       </div>
+     </div>
+    </div>
+  </body>
+  <script>
+  
+    function onSuccess(result) {
+      if (result) {
+        document.getElementById('success-message').style.display = 'block';
+      }
+    }
+    
+    function setEmailColumn() {
+      var select = document.getElementById('email-column-selector');
+      var selectedOption = select.options[select.selectedIndex].value;
+      google.script.run.withSuccessHandler(onSuccess).setPreference('EMAIL_COLUMN', selectedOption);
+    }
+    
+  </script>
+</html>
+
+

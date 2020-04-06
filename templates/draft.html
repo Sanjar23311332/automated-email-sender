@@ -1,0 +1,23 @@
+<script>
+ var datags = <?!= JSON.stringify(data) ?>;
+ console.log(datags);
+</script>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+   <div id="draft-body"></div>
+   
+   <script>
+    var output = document.getElementById('draft-body');
+    window.onload = function() {
+     output.innerHTML = datags.draft;
+    }
+   </script>
+  </body>
+</html>
+
+
